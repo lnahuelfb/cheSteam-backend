@@ -1,0 +1,54 @@
+import { Request, Response, Router } from "express";
+import { fetchDolarPrice } from "../utils/fetchDolar";
+
+const router = Router();
+
+router.get('/', async (_req: Request, res: Response) => {
+  try {
+    const dolar = await fetchDolarPrice();
+    if (dolar) {
+      res.json(dolar);
+    } else {
+      res.status(500).json({ error: 'No se pudo obtener el precio del dólar' });
+    }
+  } catch (error) {
+    console.error('Error al obtener el precio del dólar:', error);
+    res.status(500).json({ error: 'Error al obtener los datos del dólar' });
+  }
+});
+
+router.get('/:tipo', async (req: Request, res: Response) => {
+  const { tipo } = req.params;
+  const tiposValidos = ['oficial', 'bolsa', 'cripto'];
+
+  // Verificación del tipo de dólar
+  console.log("Tipo de dólar solicitado:", tipo);
+  if (!tiposValidos.includes(tipo.toLowerCase())) {
+    console.error("Tipo de dólar no válido:", tipo);
+    return res.status(400).json({ error: `Tipo de dólar no válido: ${tipo}` });
+  }
+
+  try {
+    console.log("Obteniendo precios de los dólares...");
+    const dolares = await fetchDolarPrice();
+
+    if (dolares === null) {
+      return res.status(500).json({ error: 'No se pudo obtener el precio del dólar' });
+    }
+
+    console.log("Dólares obtenidos:", dolares);
+
+    const dolarFiltrado = dolares.find((d) => d.casa.toLowerCase() === tipo.toLowerCase());
+
+    if (!dolarFiltrado) {
+      return res.status(404).json({ error: `No se encontró el tipo de dólar: ${tipo}` });
+    }
+
+    return res.json(dolarFiltrado);
+  } catch (error) {
+    console.error("Error en la consulta de la API de dólares:", error);
+    return res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+export default router;
