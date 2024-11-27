@@ -3,18 +3,14 @@ import { Dolar } from "../types/dolar";
 
 export const fetchDolarPrice = async (): Promise<[Dolar, Dolar, Dolar] | null> => {
   try {
-    console.log("Haciendo la llamada a la API de dólares...");
     const response = await axios.get<Dolar[]>('https://dolarapi.com/v1/dolares');
-    console.log("Respuesta de la API recibida:", response.data);
-
+  
     const data = response.data;
 
     // Filtramos los tipos de dólares relevantes
     const dolaresFiltrados = data.filter((dolar) =>
       ["oficial", "bolsa", "cripto"].includes(dolar.casa.toLowerCase())
     );
-
-    console.log("Dólares filtrados:", dolaresFiltrados);
 
     // Si no hay 3 tipos, devolvemos null sin errores
     if (dolaresFiltrados.length !== 3) {

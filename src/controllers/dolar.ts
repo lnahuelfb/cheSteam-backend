@@ -22,21 +22,17 @@ router.get('/:tipo', async (req: Request, res: Response) => {
   const tiposValidos = ['oficial', 'bolsa', 'cripto'];
 
   // Verificación del tipo de dólar
-  console.log("Tipo de dólar solicitado:", tipo);
   if (!tiposValidos.includes(tipo.toLowerCase())) {
     console.error("Tipo de dólar no válido:", tipo);
     return res.status(400).json({ error: `Tipo de dólar no válido: ${tipo}` });
   }
 
   try {
-    console.log("Obteniendo precios de los dólares...");
     const dolares = await fetchDolarPrice();
 
     if (dolares === null) {
       return res.status(500).json({ error: 'No se pudo obtener el precio del dólar' });
     }
-
-    console.log("Dólares obtenidos:", dolares);
 
     const dolarFiltrado = dolares.find((d) => d.casa.toLowerCase() === tipo.toLowerCase());
 

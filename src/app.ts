@@ -7,10 +7,6 @@ const app: Application = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.json({message: 'Hello World!'});
-});
-
 app.use('/api', routes);
 
 app.listen(3000, () => {

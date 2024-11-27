@@ -1,6 +1,10 @@
 export const getGames = async (gameTitle: string) => {
+  console.log('Obteniendo juegos...');
+  console.log('Título del juego:', gameTitle);
   try {
     const response = await fetch(`https://store.steampowered.com/search/suggest?cc=AR&l=spanish&f=jsonfull&term=${encodeURIComponent(gameTitle)}`);
+
+    console.log(response);
 
     if (!response.ok) {
       return null;
