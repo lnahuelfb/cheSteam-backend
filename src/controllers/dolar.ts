@@ -3,6 +3,10 @@ import { fetchDolarPrice } from "../utils/fetchDolar";
 
 const router = Router();
 
+interface Params {
+  tipo: string;
+}
+
 router.get('/', async (_req: Request, res: Response) => {
   try {
     const dolar = await fetchDolarPrice();
@@ -17,11 +21,10 @@ router.get('/', async (_req: Request, res: Response) => {
   }
 });
 
-router.get('/:tipo', async (req: Request, res: Response) => {
+router.get('/:tipo', async (req: Request<Params>, res: Response) => {
   const { tipo } = req.params;
   const tiposValidos = ['oficial', 'bolsa', 'cripto'];
 
-  // Verificación del tipo de dólar
   if (!tiposValidos.includes(tipo.toLowerCase())) {
     console.error("Tipo de dólar no válido:", tipo);
     return res.status(400).json({ error: `Tipo de dólar no válido: ${tipo}` });

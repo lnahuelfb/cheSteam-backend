@@ -3,7 +3,11 @@ import { getGames } from "../utils/fetchGames";
 
 const router = Router();
 
-router.get('/:gameTitle', async (req: Request, res: Response) => {
+interface Params {
+  gameTitle: string;
+}
+
+router.get('/:gameTitle', async (req: Request<Params>, res: Response) => {
   const { gameTitle } = req.params;
 
   if (!gameTitle) {
