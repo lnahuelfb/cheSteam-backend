@@ -12,11 +12,13 @@ export const getGames = async (gameTitle: string) => {
       return null;
     }
 
-    const filteredData = data.filter((item: any) => {
-      const isRelevantType = item.type === "game" || item.type === "sub" || item.type === "dlc";
-      const isNotFreeDlc = !(item.type === "dlc" && item.price === 'Gratuito');
-      return isRelevantType && isNotFreeDlc;
-    });
+    const relevantTypes = { game: true, sub: true, dlc: true, bundle: true };
+
+const filteredData = data.filter((item: any) => {
+  const isRelevantType = relevantTypes[item.type];
+  const isNotFreeDlc = !(item.type === "dlc" && item.price === "Gratuito");
+  return isRelevantType && isNotFreeDlc;
+});
 
     if (filteredData.length === 0) {
 
