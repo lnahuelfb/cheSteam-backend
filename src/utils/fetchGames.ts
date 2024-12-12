@@ -12,10 +12,10 @@ export const getGames = async (gameTitle: string) => {
       return null;
     }
 
-    const relevantTypes = { game: true, sub: true, dlc: true, bundle: true };
+const relevantTypes = new Set(["game", "sub", "dlc", "bundle"]);
 
 const filteredData = data.filter((item: any) => {
-  const isRelevantType = relevantTypes[item.type];
+  const isRelevantType = relevantTypes.has(item.type);
   const isNotFreeDlc = !(item.type === "dlc" && item.price === "Gratuito");
   return isRelevantType && isNotFreeDlc;
 });
