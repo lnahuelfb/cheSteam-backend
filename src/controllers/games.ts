@@ -40,7 +40,21 @@ router.get('/:gameTitle', async (req: Request<Params>, res: Response) => {
       return res.status(500).json({ error: 'No se pudieron obtener los juegos' });
     }
 
-    const gamesList = games.map(game => new Game(game.name, game.price, game.img, oficial.venta, mep.venta, crypto.venta));
+    const gamesList = games.map(game => {
+      const gameInstance = new Game(game.name, game.price, game.img, oficial.venta, mep.venta, crypto.venta);
+      
+      return {
+        name: gameInstance.getName(),
+        image: gameInstance.getImage(),
+        formattedPrice: gameInstance.formattedPrice(),
+        formattedTotalOfficialPrice: gameInstance.formattedTotalOfficialPrice(),
+        formattedTotalMepPrice: gameInstance.formattedTotalMepPrice(),
+        formattedTotalCryptoPrice: gameInstance.formattedTotalCryptoPrice(),
+        formattedOfficialTaxes: gameInstance.formattedOfficialTaxes(),
+        formattedMepTaxes: gameInstance.formattedMepTaxes(),
+        formattedCryptoTaxes: gameInstance.formattedCryptoTaxes(),
+      };
+    });
 
     return res.json(gamesList);
   } catch (error) {
