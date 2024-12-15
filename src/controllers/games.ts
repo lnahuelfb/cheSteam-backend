@@ -1,10 +1,22 @@
 import { Request, Response, Router } from "express";
+import { Game } from "../classes/Game";
 import { getGames } from "../utils/fetchGames";
+import { Dolar } from "../types/dolar";
+import { fetchDolarPrice } from "../utils/fetchDolar";
 
 const router = Router();
 
 interface Params {
   gameTitle: string;
+}
+
+interface Games {
+  id: number;
+  type: string;
+  name: string;
+  price: string;
+  img: string;
+  small_cap: string;
 }
 
 router.get('/:gameTitle', async (req: Request<Params>, res: Response) => {
@@ -15,13 +27,22 @@ router.get('/:gameTitle', async (req: Request<Params>, res: Response) => {
   }
 
   try {
-    const games = await getGames(gameTitle);
+    const games: Games[] = await getGames(gameTitle);
+    const dolar: Dolar[] | null = await fetchDolarPrice();
+
+    if (!dolar) {
+      return res.status(500).json({ error: 'No se pudieron obtener los precios del dólar' });
+    }
+
+    const [oficial, mep, crypto] = dolar;
 
     if (!games) {
       return res.status(500).json({ error: 'No se pudieron obtener los juegos' });
     }
 
-    return res.json(games);
+    const gamesList = games.map(game => new Game(game.name, game.price, game.img, oficial.venta, mep.venta, crypto.venta));
+
+    return res.json(gamesList);
   } catch (error) {
     console.error('Error al obtener los juegos:', error);
     return res.status(500).json({ error: 'Error interno del servidor' });
