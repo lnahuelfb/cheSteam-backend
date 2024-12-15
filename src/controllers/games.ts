@@ -41,7 +41,7 @@ router.get('/:gameTitle', async (req: Request<Params>, res: Response) => {
     }
 
     const gamesList = games.map(game => {
-      const gameInstance = new Game(game.name, game.price, game.img, oficial.venta, mep.venta, crypto.venta);
+      const gameInstance = new Game(game.name, game.price, game.small_cap, oficial.venta, mep.venta, crypto.venta);
       
       return {
         name: gameInstance.getName(),
