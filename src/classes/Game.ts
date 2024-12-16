@@ -3,6 +3,7 @@ export class Game {
   private name: string;
   private price: number;
   private image: string;
+  private type: string;
   private dolarPrice: number;
   private dolarMepPrice: number;
   private dolarCryptoPrice: number;
@@ -16,6 +17,7 @@ export class Game {
     name: string,
     price: string,
     image: string,
+    type: string,
     dolarPrice: number,
     dolarMepPrice: number,
     dolarCryptoPrice: number,
@@ -34,6 +36,7 @@ export class Game {
     }
 
     this.image = image;
+    this.type = type;
     this.dolarPrice = dolarPrice;
     this.dolarMepPrice = dolarMepPrice;
     this.dolarCryptoPrice = dolarCryptoPrice;
@@ -61,6 +64,10 @@ export class Game {
 
   public getId(): number {
     return this.id;
+  }
+
+  public getType(): string {
+    return this.type;
   }
 
   private calculateTotalTaxes(priceARS: number, taxes: number[]): number {
