@@ -1,4 +1,5 @@
 export class Game {
+  private id: number;
   private name: string;
   private price: number;
   private image: string;
@@ -11,17 +12,17 @@ export class Game {
   private static cryptoTaxes: number[] = [0];
 
   constructor(
+    id: number,
     name: string,
     price: string,
     image: string,
     dolarPrice: number,
     dolarMepPrice: number,
-    dolarCryptoPrice: number
+    dolarCryptoPrice: number,
   ) {
+    this.id = id;
     this.name = name;
-
-    // Manejo de precio "Free to Play" o "Gratuito"
-    const cleanPrice = price.replace(/[^0-9.]+/g, ""); // Elimina cualquier texto no numérico, como "$" o "USD"
+    const cleanPrice = price.replace(/[^0-9.]+/g, "");
     if (price.includes("Free to Play") || price.includes("Gratuito")) {
       this.price = 0;
     } else {
@@ -56,6 +57,10 @@ export class Game {
 
   public getImage(): string {
     return this.image;
+  }
+
+  public getId(): number {
+    return this.id;
   }
 
   private calculateTotalTaxes(priceARS: number, taxes: number[]): number {
