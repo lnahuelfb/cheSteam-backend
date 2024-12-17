@@ -40,23 +40,24 @@ router.get('/:gameTitle', async (req: Request<Params>, res: Response) => {
       return res.status(500).json({ error: 'No se pudieron obtener los juegos' });
     }
 
-    const gamesList = games.map(game => {
-      const gameInstance = new Game(game.id, game.name, game.price, game.small_cap, game.type, oficial.venta, mep.venta, crypto.venta);
+    const gamesList = games.filter(game => game.price && game.price.trim() !== "")
+      .map(game => {
+        const gameInstance = new Game(game.id, game.name, game.price, game.small_cap, game.type, oficial.venta, mep.venta, crypto.venta);
 
-      return {
-        id: gameInstance.getId(),
-        name: gameInstance.getName(),
-        image: gameInstance.getImage(),
-        type: gameInstance.getType(),
-        formattedPrice: gameInstance.formattedPrice(),
-        formattedTotalOfficialPrice: gameInstance.formattedTotalOfficialPrice(),
-        formattedTotalMepPrice: gameInstance.formattedTotalMepPrice(),
-        formattedTotalCryptoPrice: gameInstance.formattedTotalCryptoPrice(),
-        formattedOfficialTaxes: gameInstance.formattedOfficialTaxes(),
-        formattedMepTaxes: gameInstance.formattedMepTaxes(),
-        formattedCryptoTaxes: gameInstance.formattedCryptoTaxes(),
-      };
-    });
+        return {
+          id: gameInstance.getId(),
+          name: gameInstance.getName(),
+          image: gameInstance.getImage(),
+          type: gameInstance.getType(),
+          formattedPrice: gameInstance.formattedPrice(),
+          formattedTotalOfficialPrice: gameInstance.formattedTotalOfficialPrice(),
+          formattedTotalMepPrice: gameInstance.formattedTotalMepPrice(),
+          formattedTotalCryptoPrice: gameInstance.formattedTotalCryptoPrice(),
+          formattedOfficialTaxes: gameInstance.formattedOfficialTaxes(),
+          formattedMepTaxes: gameInstance.formattedMepTaxes(),
+          formattedCryptoTaxes: gameInstance.formattedCryptoTaxes(),
+        };
+      });
 
     return res.json(gamesList);
   } catch (error) {
