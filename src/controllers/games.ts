@@ -20,7 +20,7 @@ interface Games {
   small_cap: string;
 }
 
-router.get('/:gameTitle', async (req: Request<Params>, res: Response) => {
+router.get('/:gameTitle', async (req, res) => {
   const { gameTitle } = req.params;
 
   if (!gameTitle) {
@@ -67,7 +67,7 @@ router.get('/:gameTitle', async (req: Request<Params>, res: Response) => {
   }
 })
 
-router.get('/', async (req: Request<Params>, res: Response) => {
+router.get('/', async (req, res) => {
   const id = req.query.id as string
 
   if (!id) {

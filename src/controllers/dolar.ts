@@ -3,11 +3,7 @@ import { fetchDolarPrice } from "../utils/fetchDolar";
 
 const router = Router();
 
-interface Params {
-  tipo: string;
-}
-
-router.get('/', async (_req: Request, res: Response) => {
+router.get('/', async (_req, res) => {
   try {
     const dolar = await fetchDolarPrice();
     if (dolar) {
@@ -21,7 +17,7 @@ router.get('/', async (_req: Request, res: Response) => {
   }
 });
 
-router.get('/:tipo', async (req: Request<Params>, res: Response) => {
+router.get('/:tipo', async (req, res) => {
   const { tipo } = req.params;
   const tiposValidos = ['oficial', 'bolsa', 'cripto'];
 

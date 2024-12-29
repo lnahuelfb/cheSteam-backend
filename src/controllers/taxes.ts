@@ -10,7 +10,7 @@ const taxes = {
   },
 }
 
-router.get("/", (_req: Request, res: Response) => {
+router.get("/", (_req, res) => {
   res.json(taxes);
 });
 
