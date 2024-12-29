@@ -1,3 +1,7 @@
+import axios from 'axios';
+import { formatGame } from './formatGame';
+import { GameFetched } from '../types/games';
+
 interface CachedGameData {
   data: any;
   timestamp: number;
@@ -17,14 +21,12 @@ export const getGames = async (gameTitle: string) => {
 
     const title = encodeURIComponent(gameTitle);
     const response = await fetch(`https://store.steampowered.com/search/suggest?cc=AR&l=spanish&f=jsonfull&term=${title}`);
-    console.log("response:", response)
 
-    if (!response.ok) {
+    if (!response?.ok) {
       return null;
     }
 
     const data = await response.json();
-    console.log("data:",  data)
 
     if (!data || data.length === 0) {
       return null;

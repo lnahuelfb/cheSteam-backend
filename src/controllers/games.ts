@@ -3,11 +3,12 @@ import { Game } from "../classes/Game";
 import { getGames } from "../utils/fetchGames";
 import { Dolar } from "../types/dolar";
 import { fetchDolarPrice } from "../utils/fetchDolar";
+import { fetchDetailsGame } from "../utils/fetchDetailsGame";
 
 const router = Router();
 
 interface Params {
-  gameTitle: string;
+  gameTitle?: string;
 }
 
 interface Games {
@@ -64,6 +65,24 @@ router.get('/:gameTitle', async (req: Request<Params>, res: Response) => {
     console.error('Error al obtener los juegos:', error);
     return res.status(500).json({ error: 'Error interno del servidor' });
   }
+})
+
+router.get('/', async (req: Request<Params>, res: Response) => {
+  const id = req.query.id as string
+
+  if (!id) {
+    return res.status(400).json({ error: 'El id del juego no puede ser vacío' });
+  }
+
+  try {
+    const game = await fetchDetailsGame(id);
+
+    return res.json(game);
+  } catch (error) {
+    console.error('Error al obtener el juego:', error);
+    return res.status(500).json({ error: 'Error interno del servidor' });
+  }
+
 })
 
 export default router;
