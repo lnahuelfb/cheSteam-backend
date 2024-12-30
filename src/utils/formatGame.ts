@@ -59,7 +59,7 @@ export const formatGame = async (games: any) => {
     final: gameData.priceOverview.final / 100,
     priceOficial: calculatePriceOficial(gameData.priceOverview.final / 100 * oficial.venta),
     priceMep: calculatePriceMep(gameData.priceOverview.final / 100 * mep.venta),
-    priceCrypto: gameData.priceOverview.final / 100 * crypto.venta,
+    priceCrypto: (gameData.priceOverview.final / 100 * crypto.venta).toFixed(2),
     discount: gameData.priceOverview.discount_percent === 0 ? false : true,
     discountPercent: gameData.priceOverview.discount_percent,
   }
@@ -87,7 +87,7 @@ export const formatGame = async (games: any) => {
             price,
             priceOficial: calculatePriceOficial(price * oficial.venta),
             priceMep: calculatePriceMep(price * mep.venta),
-            priceCrypto: price * crypto.venta,
+            priceCrypto: (price * crypto.venta).toFixed(2),
             discount
           }
         })
