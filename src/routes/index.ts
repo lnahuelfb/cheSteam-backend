@@ -6,9 +6,9 @@ import Taxes from '../controllers/taxes';
 
 const router = Router();
 
+router.use('/', Hola);
 router.use('/dolar', Dolar);
 router.use('/games', Games);
-router.use('/hola', Hola);
 router.use('/taxes', Taxes);
 
 export default router;

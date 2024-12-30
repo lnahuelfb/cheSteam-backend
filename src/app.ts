@@ -8,9 +8,6 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api', routes);
-app.get('/', (_req, res) => {
-  res.send('Hello World!');
-});
 
 const PORT = process.env.PORT || 3001;
 
