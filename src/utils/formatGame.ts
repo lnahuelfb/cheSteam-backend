@@ -19,6 +19,7 @@ export const formatGame = async (games: any) => {
     },
   }
 
+
   const {
     steam_appid,
     name,
@@ -41,11 +42,23 @@ export const formatGame = async (games: any) => {
     packageGroups: package_groups,
   }
 
+  function calculatePriceOficial(basePrice: number): number {
+    const { IVA, IIBB, Ganancias } = taxes.gamesAndServices;
+    const totalTaxRate = IVA + IIBB + Ganancias;
+    return parseFloat((basePrice * (1 + totalTaxRate)).toFixed(2));
+  }
+
+  function calculatePriceMep(basePrice: number): number {
+    const { IVA } = taxes.gamesAndServices;
+    return parseFloat((basePrice * (1 + IVA)).toFixed(2));
+  }
+
+
   gameData.priceOverview = {
     initial: gameData.priceOverview.initial / 100,
     final: gameData.priceOverview.final / 100,
-    finalOficial: gameData.priceOverview.final / 100 * oficial.venta,
-    finalMep: gameData.priceOverview.final / 100 * mep.venta,
+    finalOficial: calculatePriceOficial(gameData.priceOverview.final / 100 * oficial.venta),
+    finalMep: calculatePriceMep(gameData.priceOverview.final / 100 * mep.venta),
     finalCrypto: gameData.priceOverview.final / 100 * crypto.venta,
     discount: gameData.priceOverview.discount_percent === 0 ? false : true,
     discountPercent: gameData.priceOverview.discount_percent,
@@ -72,8 +85,8 @@ export const formatGame = async (games: any) => {
             id: packageid,
             title,
             price,
-            priceOficial: price * oficial.venta,
-            priceMep: price * mep.venta,
+            priceOficial: calculatePriceOficial(price * oficial.venta),
+            priceMep: calculatePriceMep(price * mep.venta),
             priceCrypto: price * crypto.venta,
             discount
           }
@@ -81,8 +94,6 @@ export const formatGame = async (games: any) => {
       }
     })
   }
-
-  // console.log(gameData)
 
   return gameData;
 }
