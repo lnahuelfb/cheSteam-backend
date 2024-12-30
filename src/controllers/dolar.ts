@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { Router } from "express";
 import { fetchDolarPrice } from "../utils/fetchDolar";
 
 const router = Router();
@@ -6,11 +6,13 @@ const router = Router();
 router.get('/', async (_req, res) => {
   try {
     const dolar = await fetchDolarPrice();
+
     if (dolar) {
       res.json(dolar);
     } else {
       res.status(500).json({ error: 'No se pudo obtener el precio del dólar' });
     }
+
   } catch (error) {
     console.error('Error al obtener el precio del dólar:', error);
     res.status(500).json({ error: 'Error al obtener los datos del dólar' });

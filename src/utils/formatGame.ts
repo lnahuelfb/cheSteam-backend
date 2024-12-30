@@ -1,4 +1,23 @@
-export const formatGame = (games: any) => {
+import { fetchDolarPrice } from "./fetchDolar"
+import { Dolar } from "../types/dolar"
+
+export const formatGame = async (games: any) => {
+
+  const dolar: Dolar[] | null = await fetchDolarPrice();
+
+  if (!dolar) {
+    return null;
+  }
+
+  const [oficial, mep, crypto] = dolar;
+
+  const taxes = {
+    gamesAndServices: {
+      IVA: 0.21,
+      IIBB: 0.03,
+      Ganancias: 0.30,
+    },
+  }
 
   const {
     steam_appid,
@@ -25,6 +44,9 @@ export const formatGame = (games: any) => {
   gameData.priceOverview = {
     initial: gameData.priceOverview.initial / 100,
     final: gameData.priceOverview.final / 100,
+    finalOficial: gameData.priceOverview.final / 100 * oficial.venta,
+    finalMep: gameData.priceOverview.final / 100 * mep.venta,
+    finalCrypto: gameData.priceOverview.final / 100 * crypto.venta,
     discount: gameData.priceOverview.discount_percent === 0 ? false : true,
     discountPercent: gameData.priceOverview.discount_percent,
   }
@@ -50,6 +72,9 @@ export const formatGame = (games: any) => {
             id: packageid,
             title,
             price,
+            priceOficial: price * oficial.venta,
+            priceMep: price * mep.venta,
+            priceCrypto: price * crypto.venta,
             discount
           }
         })
