@@ -1,24 +1,29 @@
-import { fetchDolarPrice } from "./fetchDolar"
-import { Dolar } from "../types/dolar"
+import { fetchDolarPrice } from "./fetchDolar";
+import { Dolar } from "../types/dolar";
 
+// Helpers
+function calculatePrice(basePrice: number, rate: number, taxes: number[]): number {
+  const totalTaxRate = taxes.reduce((acc, tax) => acc + tax, 0);
+  return parseFloat((basePrice * (1 + totalTaxRate) * rate).toFixed(2));
+}
+
+function formatTitle(optionText: string): string {
+  return optionText
+    .replace(/[^a-zA-Z0-9\s\-\.\:]/g, "")
+    .split(" - span")[0];
+}
+
+function filterSubs(subs: any[]): any[] {
+  return subs.filter((sub) => !sub.option_text.includes("Commercial License"));
+}
+
+// Main function
 export const formatGame = async (games: any) => {
-
   const dolar: Dolar[] | null = await fetchDolarPrice();
-
-  if (!dolar) {
-    return null;
-  }
+  if (!dolar) return null;
 
   const [oficial, mep, crypto] = dolar;
-
-  const taxes = {
-    gamesAndServices: {
-      IVA: 0.21,
-      IIBB: 0.03,
-      Ganancias: 0.30,
-    },
-  }
-
+  const taxes = [0.21, 0.03, 0.30];
 
   const {
     steam_appid,
@@ -28,72 +33,60 @@ export const formatGame = async (games: any) => {
     header_image,
     price_overview,
     package_groups,
-    short_description
-  } = games
+    short_description,
+  } = games;
 
-  let gameData = {
+  const gameData = {
     id: steam_appid,
     name,
     isFree: is_free,
     type,
     headerImage: header_image,
     description: short_description,
-    priceOverview: price_overview,
-    packageGroups: package_groups,
-  }
+    priceOverview: {
+      initial: price_overview.initial / 100,
+      final: price_overview.final / 100,
+      priceOficial: calculatePrice(
+        price_overview.final / 100,
+        oficial.venta,
+        taxes
+      ),
+      priceMep: calculatePrice(price_overview.final / 100, mep.venta, [0.21]),
+      priceCrypto: (
+        (price_overview.final / 100) *
+        crypto.venta
+      ).toFixed(2),
+      discount: price_overview.discount_percent > 0,
+      discountPercent: price_overview.discount_percent,
+    },
+    packageGroups: package_groups.map((item: any) => ({
+      title: item.title.split(" ").slice(1).join(" "),
+      subs: filterSubs(item.subs).map((sub: any) => {
+        const { packageid, percent_savings_text, option_text, price_in_cents_with_discount } = sub;
 
-  function calculatePriceOficial(basePrice: number): number {
-    const { IVA, IIBB, Ganancias } = taxes.gamesAndServices;
-    const totalTaxRate = IVA + IIBB + Ganancias;
-    return parseFloat((basePrice * (1 + totalTaxRate)).toFixed(2));
-  }
-
-  function calculatePriceMep(basePrice: number): number {
-    const { IVA } = taxes.gamesAndServices;
-    return parseFloat((basePrice * (1 + IVA)).toFixed(2));
-  }
-
-
-  gameData.priceOverview = {
-    initial: gameData.priceOverview.initial / 100,
-    final: gameData.priceOverview.final / 100,
-    priceOficial: calculatePriceOficial(gameData.priceOverview.final / 100 * oficial.venta),
-    priceMep: calculatePriceMep(gameData.priceOverview.final / 100 * mep.venta),
-    priceCrypto: (gameData.priceOverview.final / 100 * crypto.venta).toFixed(2),
-    discount: gameData.priceOverview.discount_percent === 0 ? false : true,
-    discountPercent: gameData.priceOverview.discount_percent,
-  }
-
-  gameData = {
-    ...gameData,
-    packageGroups: gameData.packageGroups.map((item: any) => {
-      let { title } = item
-
-      title = title.split(' ').slice(1).join(' ')
-
-      return {
-        title,
-        subs: item.subs.map((sub: any) => {
-          let { packageid, percent_savings_text, option_text, price_in_cents_with_discount } = sub
-
-          const discount = percent_savings_text.toString().replace(/[^0-9]/g, '')
-
-          const title = option_text.split(' - ')[0]
-          const price = price_in_cents_with_discount / 100
-
-          return {
-            id: packageid,
-            title,
-            price,
-            priceOficial: calculatePriceOficial(price * oficial.venta),
-            priceMep: calculatePriceMep(price * mep.venta),
-            priceCrypto: (price * crypto.venta).toFixed(2),
-            discount
-          }
-        })
-      }
-    })
-  }
+        return {
+          id: packageid,
+          title: formatTitle(option_text),
+          price: price_in_cents_with_discount / 100,
+          priceOficial: calculatePrice(
+            price_in_cents_with_discount / 100,
+            oficial.venta,
+            taxes
+          ),
+          priceMep: calculatePrice(
+            price_in_cents_with_discount / 100,
+            mep.venta,
+            [0.21]
+          ),
+          priceCrypto: (
+            (price_in_cents_with_discount / 100) *
+            crypto.venta
+          ).toFixed(2),
+          discount: percent_savings_text.replace(/[^0-9]/g, ""),
+        };
+      }),
+    })),
+  };
 
   return gameData;
-}
+};
