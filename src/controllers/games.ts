@@ -67,8 +67,8 @@ router.get('/:gameTitle', async (req, res) => {
   }
 })
 
-router.get('/', async (req, res) => {
-  const id = req.query.id as string
+router.get('/details/:id', async (req, res) => {
+  const { id } = req.params
 
   if (!id) {
     return res.status(400).json({ error: 'El id del juego no puede ser vacío' });

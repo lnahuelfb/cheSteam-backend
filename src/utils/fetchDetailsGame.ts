@@ -19,17 +19,16 @@ export const fetchDetailsGame = async (id: string) => {
   }
 
   // Realiza la solicitud si no hay caché o está vencida
-  const res = await fetch(`https://store.steampowered.com/api/appdetails?appids=${id}`);
+  const res = await fetch(`https://store.steampowered.com/api/appdetails?cc=AR&l=spanish&appids=${id}`);
   const game: GameFetched = await res.json();
 
   const gameData = formatGame(game[id].data);
-  const result = gameData.packageGroups[0].subs;
 
   // Almacena el resultado en caché
   cache[id] = {
-    data: result,
+    data: gameData,
     timestamp: currentTime,
   };
 
-  return result;
+  return gameData;
 };

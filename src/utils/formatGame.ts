@@ -7,7 +7,8 @@ export const formatGame = (games: any) => {
     type,
     header_image,
     price_overview,
-    package_groups
+    package_groups,
+    short_description
   } = games
 
   let gameData = {
@@ -16,8 +17,16 @@ export const formatGame = (games: any) => {
     isFree: is_free,
     type,
     headerImage: header_image,
+    description: short_description,
     priceOverview: price_overview,
     packageGroups: package_groups,
+  }
+
+  gameData.priceOverview = {
+    initial: gameData.priceOverview.initial / 100,
+    final: gameData.priceOverview.final / 100,
+    discount: gameData.priceOverview.discount_percent === 0 ? false : true,
+    discountPercent: gameData.priceOverview.discount_percent,
   }
 
   gameData = {
