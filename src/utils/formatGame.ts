@@ -57,9 +57,9 @@ export const formatGame = async (games: any) => {
   gameData.priceOverview = {
     initial: gameData.priceOverview.initial / 100,
     final: gameData.priceOverview.final / 100,
-    finalOficial: calculatePriceOficial(gameData.priceOverview.final / 100 * oficial.venta),
-    finalMep: calculatePriceMep(gameData.priceOverview.final / 100 * mep.venta),
-    finalCrypto: gameData.priceOverview.final / 100 * crypto.venta,
+    priceOficial: calculatePriceOficial(gameData.priceOverview.final / 100 * oficial.venta),
+    priceMep: calculatePriceMep(gameData.priceOverview.final / 100 * mep.venta),
+    priceCrypto: gameData.priceOverview.final / 100 * crypto.venta,
     discount: gameData.priceOverview.discount_percent === 0 ? false : true,
     discountPercent: gameData.priceOverview.discount_percent,
   }
