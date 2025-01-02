@@ -45,6 +45,11 @@ export const formatGame = async (games: any) => {
     description: short_description,
     priceOverview: {
       initial: price_overview.initial / 100,
+      initialARS: calculatePrice(
+        price_overview.initial / 100,
+        oficial.venta,
+        taxes
+      ),
       final: price_overview.final / 100,
       priceOficial: calculatePrice(
         price_overview.final / 100,
