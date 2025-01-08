@@ -3,11 +3,17 @@ import { Request, Response, Router } from "express";
 const router = Router();
 
 const taxes = {
-  gamesAndServices: {
-    IVA: 0.21,
-    IIBB: 0.03,
-    Ganancias: 0.30,
-  },
+  gamesAndServices: [{
+    tax: "IVA",
+    percentage: 0.21,
+  }, {
+    tax: "IIBB",
+    percentage: 0.03,
+  }, {
+    tax: "Ganancias",
+    percentage: 0.30,
+  }]
+  ,
 }
 
 router.get("/", (_req, res) => {
