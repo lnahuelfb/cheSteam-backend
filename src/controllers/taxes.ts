@@ -9,11 +9,7 @@ const taxes = {
   }, {
     tax: "IIBB",
     percentage: 0.03,
-  }, {
-    tax: "Ganancias",
-    percentage: 0.30,
   }]
-  ,
 }
 
 router.get("/", (_req, res) => {
