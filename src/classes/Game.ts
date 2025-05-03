@@ -8,7 +8,7 @@ export class Game {
   private dolarMepPrice: number;
   private dolarCryptoPrice: number;
 
-  private static officialTaxes: number[] = [0.21, 0.3, 0.02];
+  private static officialTaxes: number[] = [0.21, 0.02];
   private static mepTaxes: number[] = [0.21];
   private static cryptoTaxes: number[] = [0];
 
