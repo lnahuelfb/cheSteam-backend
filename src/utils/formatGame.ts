@@ -23,7 +23,7 @@ export const formatGame = async (games: any) => {
   if (!dolar) return null;
 
   const [oficial, mep, crypto] = dolar;
-  const taxes = [0.21, 0.03, 0.30];
+  const taxes = [0.21, 0.03];
 
   const {
     steam_appid,
