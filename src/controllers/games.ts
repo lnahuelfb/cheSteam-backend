@@ -4,6 +4,7 @@ import { getGames } from "../utils/fetchGames";
 import { Dolar } from "../types/dolar";
 import { fetchDolarPrice } from "../utils/fetchDolar";
 import { fetchDetailsGame } from "../utils/fetchDetailsGame";
+import { setCache } from "../utils/cacheControl";
 
 const router = Router();
 
@@ -60,6 +61,7 @@ router.get('/:gameTitle', async (req, res) => {
         };
       });
 
+    setCache(res, "games");
     return res.json(gamesList);
   } catch (error) {
     console.error('Error al obtener los juegos:', error);
@@ -77,6 +79,7 @@ router.get('/details/:id', async (req, res) => {
   try {
     const game = await fetchDetailsGame(id);
 
+    setCache(res, "games");
     return res.json(game);
   } catch (error) {
     console.error('Error al obtener el juego:', error);

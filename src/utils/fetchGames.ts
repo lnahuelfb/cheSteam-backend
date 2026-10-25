@@ -1,7 +1,3 @@
-import axios from 'axios';
-import { formatGame } from './formatGame';
-import { GameFetched } from '../types/games';
-
 interface CachedGameData {
   data: any;
   timestamp: number;
