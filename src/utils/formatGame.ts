@@ -1,5 +1,6 @@
 import { fetchDolarPrice } from "./fetchDolar";
 import { Dolar } from "../types/dolar";
+import { officialTaxes, mepTaxes } from "../config/taxes";
 
 // Helpers
 function calculatePrice(basePrice: number, rate: number, taxes: number[]): number {
@@ -23,7 +24,6 @@ export const formatGame = async (games: any) => {
   if (!dolar) return null;
 
   const [oficial, mep, crypto] = dolar;
-  const taxes = [0.21, 0.03];
 
   const {
     steam_appid,
@@ -48,15 +48,15 @@ export const formatGame = async (games: any) => {
       initialARS: calculatePrice(
         price_overview.initial / 100,
         oficial.venta,
-        taxes
+        officialTaxes
       ),
       final: price_overview.final / 100,
       priceOficial: calculatePrice(
         price_overview.final / 100,
         oficial.venta,
-        taxes
+        officialTaxes
       ),
-      priceMep: calculatePrice(price_overview.final / 100, mep.venta, [0.21]),
+      priceMep: calculatePrice(price_overview.final / 100, mep.venta, mepTaxes),
       priceCrypto: (
         (price_overview.final / 100) *
         crypto.venta
@@ -76,12 +76,12 @@ export const formatGame = async (games: any) => {
           priceOficial: calculatePrice(
             price_in_cents_with_discount / 100,
             oficial.venta,
-            taxes
+            officialTaxes
           ),
           priceMep: calculatePrice(
             price_in_cents_with_discount / 100,
             mep.venta,
-            [0.21]
+            mepTaxes
           ),
           priceCrypto: (
             (price_in_cents_with_discount / 100) *

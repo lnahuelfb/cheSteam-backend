@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { fetchDolarPrice } from "../utils/fetchDolar";
+import { setCache } from "../utils/cacheControl";
 
 const router = Router();
 
@@ -8,6 +9,7 @@ router.get('/', async (_req, res) => {
     const dolar = await fetchDolarPrice();
 
     if (dolar) {
+      setCache(res, "dolar");
       res.json(dolar);
     } else {
       res.status(500).json({ error: 'No se pudo obtener el precio del dólar' });
@@ -41,6 +43,7 @@ router.get('/:tipo', async (req, res) => {
       return res.status(404).json({ error: `No se encontró el tipo de dólar: ${tipo}` });
     }
 
+    setCache(res, "dolar");
     return res.json(dolarFiltrado);
   } catch (error) {
     console.error("Error en la consulta de la API de dólares:", error);
